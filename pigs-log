@@ -1,0 +1,12 @@
+#!/bin/dash
+
+if [ ! -d .pig ];
+then
+	echo "pigs-log: error: pigs repository directory .pig not found"
+	exit 1
+fi
+
+branch=$(cat .pig/config | grep "branch: " | cut -c 9-)
+
+tac .pig/$branch/commits.pig
+# | sed "s/commits: [0-9]+//g" | echo

@@ -1,0 +1,23 @@
+#!/bin/dash
+
+if [ ! -d .pig ];
+then
+	echo "pigs-add: error: pigs repository directory .pig not found"
+	exit 1
+fi
+
+# Loop over Arguments
+for file in "$@"; do
+	# Check if file exists
+	if [ -d "$file" ]; then
+		echo "pigs-add: error: '$file' is not a regular file"
+		exit 1
+	fi
+
+	if [ -f "$file" ]; then
+		# Copy file to .pig/index
+		cp "$file" ".pig/index/"
+	else
+		echo "pigs-add: error: can not open '$file'"
+	fi
+done

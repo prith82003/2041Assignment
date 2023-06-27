@@ -1,0 +1,84 @@
+#!/bin/dash
+
+if [ ! -d .pig ];
+then
+	echo "pigs-commit: error: pigs repository directory .pig not found"
+	exit 1
+fi
+
+if [ $# -lt 2 ]; then
+	echo invalid num args
+	exit 1
+fi
+
+commitMsg=""
+
+# Check Argument
+if [ $1 = "-m" ]; then
+	if [ $# -ne 2 ]; then
+		echo invalid num args
+		exit 1
+	fi
+
+	commitMsg=$2
+elif [ $1 = "-a" ]; then
+	if [ $# -ne 3]; then
+		echo invalid num args
+		exit 1
+	fi
+
+	if [ $2 != "-m" ]; then
+		echo invalid arg
+		exit 1
+	fi
+
+	commitMsg=$3
+else
+	echo invalid arg
+	exit 1
+fi
+
+# Check if there are any changes
+fileCount=$(ls -1 .pig/index | wc -l)
+if [ $fileCount -eq 0 ]; then
+	echo "pigs-commit: error: no changes added to commit"
+	exit 1
+fi
+
+case $commitMsg in
+	-*)
+		echo invalid msg
+		exit 1
+esac
+
+if [ $1 = "-a" ]; then
+	for file in .pig/index/*; do
+		if [ -f "$file" ]; then
+			cp "$file" .pig/index
+		fi
+	done
+fi
+
+# Read commit from .pig/$branch/commits.pig
+# Read Branch from .pig/config
+branch=$(cat .pig/config | grep "branch: " | cut -c 9-)
+echo $branch
+currCommit=$(cat .pig/$branch/commits.pig | wc -l)
+echo "Curr: Commit $currCommit"
+
+if [ $currCommit -gt 0 ]; then
+	prevCommit=$(($currCommit - 1))
+	echo "Prev: Commit $prevCommit"
+	
+	# Transfer files from prev commit
+	for file in .pig/$branch/$prevCommit/*; do
+		if [ -f "$file" ]; then
+			cp "$file" .pig/$branch/$currCommit
+		fi
+	done
+fi
+
+# Create commit folder
+mkdir .pig/$branch/$currCommit
+mv .pig/index/* .pig/$branch/$currCommit
+echo "$currCommit $commitMsg" >> .pig/$branch/commits.pig

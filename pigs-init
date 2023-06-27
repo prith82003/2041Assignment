@@ -1,0 +1,13 @@
+#!/bin/bash
+
+if [ -d .pig ];
+then
+	echo "./pigs-init: error: .pig already exists"
+	exit 1
+fi
+
+mkdir .pig
+mkdir .pig/index
+mkdir .pig/master
+echo "branch: master" > .pig/config
+# echo "commits: 0" > .pig/master/commits.pig
