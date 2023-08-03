@@ -1,2 +1,4 @@
 #! /usr/bin/env python3
-print(f'hello {hi}')
+import builtins
+
+print(f'{dir(builtins)}')
