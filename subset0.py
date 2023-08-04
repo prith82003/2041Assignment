@@ -1,6 +1,7 @@
 import re
 import constant
 import helper
+import subset1
 
 
 def echo(line: str) -> str:
@@ -8,10 +9,14 @@ def echo(line: str) -> str:
     line = line.replace("'", '')
 
     printString = ' '.join(line.split()[1:])
+
     printString = variable(printString)
 
+    if re.search(constant.GLOB, line):
+        printString = subset1.globstr(printString, var=True)
+
     fstring = ''
-    if re.search(constant.VARIABLE, line) or re.search(constant.ARGS, line):
+    if re.search(constant.VARIABLE, line) or re.search(constant.ARGS, line) or re.search(constant.GLOB, line):
         fstring = 'f'
 
     return f"print({fstring}'{printString}')"
@@ -21,14 +26,19 @@ def assign(line: str, variables: list[str]) -> str:
     line = line.split('=')
 
     assignment = ' '.join(line[1:])
+
+    if re.search(constant.GLOB, assignment):
+        assignment = subset1.globstr(assignment)
+
     assignment = assignment.replace('"', '')
     assignment = assignment.replace("'", '')
     variables.append(line[0])
 
-    if not re.search(r'\$[a-zA-Z0-9]+', assignment):
-        return line[0] + " = '" + assignment + "'"
+    fstring = ''
+    if re.search(constant.VARIABLE, assignment) or re.search(constant.ARGS, assignment) or re.search(constant.GLOB, assignment):
+        fstring = 'f'
 
-    res = line[0] + " = f'" + variable(assignment) + "'"
+    res = line[0] + f" = {fstring}'" + variable(assignment) + "'"
     return res
 
 

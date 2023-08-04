@@ -1,2 +1,7 @@
 #!/bin/dash
-echo tes s sd asd   asjdh    d jd     djd j     djjddds a sas   ask
+
+a=hello
+b=world
+str=$a$b
+
+echo $str

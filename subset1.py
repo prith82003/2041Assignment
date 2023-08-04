@@ -4,12 +4,18 @@ import re
 import helper
 
 
-def globstr(line: str) -> str:
+def globstr(line: str, var=False) -> str:
     globObj = re.search(constant.GLOB, line)
+    newGlob = ''
 
-    newGlob = f'sorted(glob.glob("{line[globObj.start():globObj.end()]}"))'
-    newline = line[:globObj.start() - 1] + ''.join(newGlob) + \
-        line[globObj.end():]
+    if not var:
+        newGlob = f'sorted(glob.glob("{line[globObj.start():globObj.end()]}"))'
+    else:
+        newGlob = '{' + \
+            f'" ".join(sorted(glob.glob("{line[globObj.start():globObj.end()]}")))' + '}'
+    newline = helper.replace_substr_index(
+        line, globObj.start(), globObj.end(), newGlob)
+
     return newline
 
 
@@ -38,11 +44,15 @@ def read(line: str) -> str:
 
 
 def external_command(line: str) -> str:
-    # TODO: Handle Globbing
+    if re.search(constant.GLOB, line):
+        return f'subprocess.call("{line}", shell=True)'
 
     return f'subprocess.call({line.split()})'
 
 
 def exit(line: str) -> str:
-    arg = line.split()[1]
+    arg = ''
+    if len(line.split()) > 1:
+        arg = line.split()[1]
+
     return f'sys.exit({arg})'

@@ -32,7 +32,7 @@ def test(line: str) -> str:
             invert = 'not'
 
         first_option = ''
-        if not match[0][0] == '-':
+        if not match[0].startswith('-'):
             first_option = match[0]
             match = match[1:]
 
@@ -119,6 +119,13 @@ def extra_tests(line: str) -> str:
     elif option == 'nt':
         # newwer than
         pass
+
+    return line
+
+
+def while_loop(line: str) -> str:
+    condition = line.split()[1:]
+    return f'while {condition}:'
 
 
 def if_statement(line: str) -> str:

@@ -20,6 +20,16 @@ with open(sys.argv[1], 'r') as file:
     for line in file:
         line = line.strip()
         ifindent = 0
+        commented = ''
+
+        obj = re.search(r'\s*#', line)
+        if obj:
+            commented = line[obj.start():]
+            line = line[:obj.start()]
+
+        if not line:
+            print((' ' * constant.INDENT * (indentLevel + ifindent)) + commented)
+            continue
 
         if re.search(constant.DO, line) or re.search(constant.THEN, line):
             indentLevel += 1
@@ -58,6 +68,9 @@ with open(sys.argv[1], 'r') as file:
         if re.search(constant.TEST, line):
             line = subset2.test(line)
 
+        if re.search(constant.WHILE, line):
+            line = subset2.while_loop(line)
+
         if re.search(constant.IF, line):
             line = subset2.if_statement(line)
 
@@ -69,4 +82,4 @@ with open(sys.argv[1], 'r') as file:
             line = 'else:'
             ifindent = -1
 
-        print((' ' * constant.INDENT * (indentLevel + ifindent)) + line)
+        print((' ' * constant.INDENT * (indentLevel + ifindent)) + (line + commented))

@@ -14,17 +14,17 @@ SUBPROCESS_IMPORT = 'import subprocess'
 
 # Subset 0
 ECHO = r'^echo '
-ASSIGN = r'^[a-zA-Z]+[0-9]*=[^=]+$'
-VARIABLE = r'\$\{?[a-zA-Z]+[0-9]*\}?'
+ASSIGN = r'^[a-zA-Z_]+[0-9a-zA-Z_]*=[^=]+$'
+VARIABLE = r'\$\{?[a-zA-Z_]+[0-9a-zA-Z_]*\}?'
 
 # Subset 1
-GLOB = r'\*|\?|\[|\][^\s]*'
+GLOB = r'[^#]*(\*|\?|\[|\])[^\s]*'
 FOR = r'^for '
 DO = r'^do$'
 DONE = r'^done$'
 THEN = r'^then$'
 FI = r'^fi$'
-EXIT = r'^exit [0-9]*$'
+EXIT = r'^exit ?[0-9]*$'
 CD = r'cd .*'
 READ = r'^read [a-zA-Z]+[0-9]*'
 
@@ -36,6 +36,7 @@ TEST = r'test [^&|]+$'
 IF = r'^if '
 ELIF = r'^elif '
 ELSE = r'^else$'
+WHILE = r'^while '
 
 # Builtins / Keywords
 KEYWORDS = keyword.kwlist

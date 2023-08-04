@@ -1,2 +1,7 @@
 #! /usr/bin/env -S python3 -u
-print('tes s sd asd asjdh d jd djd j djjddds a sas ask')
+
+a = 'hello'
+b = 'world'
+str = f'{a}{b}'
+
+print(f'{str}')
