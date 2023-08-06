@@ -1,7 +1,10 @@
 #!/bin/dash
 
-a=hello
-b=world
-str=$a$b
-
-echo $str
+for i in 1 2 3 4 5 6
+do
+	echo $i
+	for file in *
+	do
+		echo $file
+	done
+done

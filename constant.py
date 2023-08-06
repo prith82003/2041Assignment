@@ -11,6 +11,7 @@ SYS_IMPORT = 'import sys'
 GLOB_IMPORT = 'import glob'
 OS_IMPORT = 'import os'
 SUBPROCESS_IMPORT = 'import subprocess'
+STAT_IMPORT = 'import stat'
 
 # Subset 0
 ECHO = r'^echo '
@@ -18,7 +19,7 @@ ASSIGN = r'^[a-zA-Z_]+[0-9a-zA-Z_]*=[^=]+$'
 VARIABLE = r'\$\{?[a-zA-Z_]+[0-9a-zA-Z_]*\}?'
 
 # Subset 1
-GLOB = r'[^#]*(\*|\?|\[|\])[^\s]*'
+GLOB = r'([^\'"]|^)(\*|\?|\[|\])[^\s\*\?[\'\"]*'
 FOR = r'^for '
 DO = r'^do$'
 DONE = r'^done$'
@@ -31,7 +32,8 @@ READ = r'^read [a-zA-Z]+[0-9]*'
 PROCESS = r'^[a-zA-Z]+[0-9]*'
 
 # Subset 2
-ARGS = r'\$[0-9]+'
+ARGS = r'\$\{?((#)|(@)|([0-9])+)\}?'
+NUM_ARGS = r'\$\{?\#\}?'
 TEST = r'test [^&|]+$'
 IF = r'^if '
 ELIF = r'^elif '

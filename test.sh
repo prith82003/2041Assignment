@@ -16,8 +16,19 @@ fi
 
 mkdir tmp
 
-./"$shellfile" > tmp/out.exp
-./out.py > tmp/out.test
+pyflakes out.py > tmp/flakes.err
+pyf=$?
+
+pycodestyle out.py > tmp/codestyle.err
+pyc=$?
+
+if [ "$pyf" -ne 0 ] || [ "$pyc" -ne 0 ]; then
+	echo Errors in Style!
+fi
+
+
+./"$shellfile" $@ > tmp/out.exp
+./out.py $@ > tmp/out.test
 
 if diff tmp/out.exp tmp/out.test > /dev/null
 then
